@@ -1,0 +1,44 @@
+<?php
+
+?>
+
+<div class="wt-page-content potts-seo-helper potts-seo-surname">
+    <h2><?= e($surname) ?> Family History</h2>
+
+    <p class="lead"><?= e($description) ?></p>
+
+    <?php if (count($people) === 0) : ?>
+        <p>No public deceased people with this surname were found for the current privacy settings.</p>
+
+        <?php if (!empty($is_admin) && !empty($search_debug)) : ?>
+            <div class="card mt-3">
+                <div class="card-header">Admin lookup details</div>
+                <div class="card-body">
+                    <p class="mb-2">This is shown to administrators only. It helps us tell whether the problem is surname matching, privacy settings or deceased/living detection.</p>
+                    <table class="table table-sm">
+                        <tbody>
+                            <?php foreach ($search_debug as $label => $value) : ?>
+                                <tr>
+                                    <th scope="row"><?= e(str_replace('_', ' ', (string) $label)) ?></th>
+                                    <td><?= e((string) $value) ?></td>
+                                </tr>
+                            <?php endforeach ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <?php endif ?>
+    <?php else : ?>
+        <h3>Public ancestor profiles</h3>
+        <p>These links point to search-friendly summary pages, with links through to the full webtrees profile.</p>
+
+        <div class="list-group">
+            <?php foreach ($people as $person) : ?>
+                <a class="list-group-item list-group-item-action" href="<?= e($person['url']) ?>">
+                    <strong><?= e($person['name']) ?><?php if ($person['years'] !== '') : ?> (<?= e($person['years']) ?>)<?php endif ?></strong><br>
+                    <span><?= e($person['description']) ?></span>
+                </a>
+            <?php endforeach ?>
+        </div>
+    <?php endif ?>
+</div>

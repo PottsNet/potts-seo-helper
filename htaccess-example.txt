@@ -1,0 +1,7 @@
+# Optional Apache rewrite examples.
+# Test these on a staging copy first, because webtrees routing and hosting setups vary.
+# Replace YourTreeName with your webtrees tree name.
+#
+# RewriteEngine On
+# RewriteRule ^sitemap\.xml$ index.php?route=/tree/YourTreeName/potts-seo-helper&action=sitemap [L,QSA]
+# RewriteRule ^robots\.txt$ index.php?route=/tree/YourTreeName/potts-seo-helper&action=robots [L,QSA]

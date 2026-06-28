@@ -1,0 +1,38 @@
+<?php
+
+?>
+
+<div class="potts-seo-start-block">
+    <p><?= e($intro) ?></p>
+
+    <?php if (!empty($surnames)) : ?>
+        <h4>Main family names</h4>
+        <p>
+            <?php foreach ($surnames as $surname) : ?>
+                <a class="badge bg-secondary me-1 mb-1 text-decoration-none" href="<?= e($module->surnameUrl($tree, $surname)) ?>"><?= e($surname) ?></a>
+            <?php endforeach ?>
+        </p>
+    <?php endif ?>
+
+    <?php if (!empty($featured_people)) : ?>
+        <h4>Featured ancestors</h4>
+        <div class="row row-cols-1 row-cols-md-2 g-2 mb-3">
+            <?php foreach ($featured_people as $person) : ?>
+                <div class="col">
+                    <div class="border rounded p-2 h-100">
+                        <strong>
+                            <a href="<?= e($person['url']) ?>"><?= e($person['name']) ?><?php if ($person['years'] !== '') : ?> <span class="text-muted">(<?= e($person['years']) ?>)</span><?php endif ?></a>
+                        </strong>
+                        <div class="small mt-1"><?= e($person['description']) ?></div>
+                    </div>
+                </div>
+            <?php endforeach ?>
+        </div>
+    <?php endif ?>
+
+    <?php if ($is_admin) : ?>
+        <div class="small text-muted border-top pt-2 mt-2">
+            Admin: <a href="<?= e($health_url) ?>">SEO health check</a> · <a href="<?= e($sitemap_url) ?>">Sitemap</a>
+        </div>
+    <?php endif ?>
+</div>

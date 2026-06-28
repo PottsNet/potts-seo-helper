@@ -1,0 +1,115 @@
+<?php
+
+?>
+
+<div class="wt-page-content potts-seo-helper potts-seo-health">
+    <h2><?= e($title) ?></h2>
+
+    <p class="lead">
+        This admin-only page checks whether the SEO helper is still in safe testing mode or ready to be opened up for public indexing.
+    </p>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">Module</div>
+                <div class="card-body">
+                    <table class="table table-sm mb-0">
+                        <tbody>
+                            <tr><th scope="row">Version</th><td><?= e((string) $summary['version']) ?></td></tr>
+                            <tr><th scope="row">Site</th><td><?= e((string) $summary['site_name']) ?></td></tr>
+                            <tr><th scope="row">Tree</th><td><?= e((string) $summary['tree_name']) ?></td></tr>
+                            <tr><th scope="row">Surnames</th><td><?= e((string) $summary['configured_surnames']) ?></td></tr>
+                            <tr><th scope="row">Places</th><td><?= e((string) $summary['configured_places']) ?></td></tr>
+                            <tr><th scope="row">Featured ancestors</th><td><?= e((string) $summary['featured_people']) ?></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card h-100">
+                <div class="card-header">Public URLs</div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li><strong>Existing homepage:</strong> <a href="<?= e($homepage_url) ?>"><?= e($homepage_url) ?></a></li>
+                        <li><strong>Helper landing:</strong> <a href="<?= e($landing_url) ?>"><?= e($landing_url) ?></a></li>
+                        <li><a href="<?= e($sitemap_url) ?>"><?= e($sitemap_url) ?></a></li>
+                        <li><a href="<?= e($robots_url) ?>"><?= e($robots_url) ?></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3>Readiness checks</h3>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Check</th>
+                <th>Value</th>
+                <th>Status</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($summary['checks'] as $check) : ?>
+                <tr>
+                    <th scope="row"><?= e((string) $check['label']) ?></th>
+                    <td><code><?= e((string) $check['value']) ?></code></td>
+                    <td>
+                        <?php if ($check['status'] === 'ready') : ?>
+                            <span class="badge bg-success">Ready</span>
+                        <?php elseif ($check['status'] === 'warning') : ?>
+                            <span class="badge bg-warning text-dark">Check</span>
+                        <?php else : ?>
+                            <span class="badge bg-info text-dark">Testing</span>
+                        <?php endif ?>
+                    </td>
+                    <td><?= e((string) $check['note']) ?></td>
+                </tr>
+            <?php endforeach ?>
+        </tbody>
+    </table>
+
+    <h3>Surname page checks</h3>
+    <p>
+        These counts are based on the current webtrees privacy settings. The important number is <strong>included</strong>, which means public deceased people found for each surname.
+    </p>
+
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Surname</th>
+                <th>Included</th>
+                <th>Candidates</th>
+                <th>Loaded</th>
+                <th>Matches</th>
+                <th>Hidden/private</th>
+                <th>Living/not deceased</th>
+                <th>Mode</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($surname_reports as $report) : ?>
+                <?php $debug = $report['debug']; ?>
+                <tr>
+                    <th scope="row"><a href="<?= e($report['url']) ?>"><?= e((string) $report['surname']) ?></a></th>
+                    <td><?= e((string) $report['included']) ?></td>
+                    <td><?= e((string) ($debug['database_candidates'] ?? '')) ?></td>
+                    <td><?= e((string) ($debug['loaded_candidates'] ?? '')) ?></td>
+                    <td><?= e((string) ($debug['surname_matches'] ?? '')) ?></td>
+                    <td><?= e((string) ($debug['hidden_or_private'] ?? '')) ?></td>
+                    <td><?= e((string) ($debug['not_deceased'] ?? '')) ?></td>
+                    <td><?= e((string) ($debug['mode'] ?? '')) ?></td>
+                </tr>
+            <?php endforeach ?>
+        </tbody>
+    </table>
+
+    <div class="alert alert-secondary">
+        <strong>Suggested next move:</strong>
+        keep the menu link admin-only and indexing in testing mode until the surname pages and featured ancestor cards look right. Once you are happy, keep the menu link hidden or admin-only if your existing homepage is the public entry point. Move indexing to public mode only after the sitemap and privacy checks look right.
+    </div>
+</div>

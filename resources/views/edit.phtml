@@ -1,0 +1,302 @@
+<?php
+
+?>
+
+<h2><?= e($title) ?></h2>
+
+<?php $health_url = $admin_links['SEO health check'] ?? ''; ?>
+<?php if ($health_url !== '') : ?>
+    <div class="alert alert-info d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+        <div>
+            <strong>SEO health check</strong><br>
+            Review sitemap, privacy and indexing readiness from the health check page.
+        </div>
+        <a class="btn btn-primary" href="<?= e($health_url) ?>">Open SEO health check</a>
+    </div>
+<?php endif ?>
+
+<?php if (!empty($admin_links)) : ?>
+    <div class="card mb-4">
+        <div class="card-header">
+            Admin quick links
+        </div>
+        <div class="card-body">
+            <p class="mb-3">Use these links to check the public SEO helper pages generated for this tree.</p>
+            <div class="d-flex flex-wrap gap-2">
+                <?php foreach ($admin_links as $label => $url) : ?>
+                    <a class="btn btn-outline-primary" href="<?= e($url) ?>"><?= e($label) ?></a>
+                <?php endforeach ?>
+            </div>
+        </div>
+    </div>
+<?php else : ?>
+    <div class="alert alert-info">
+        Save the settings once, then open the SEO helper from a tree page to see health check, sitemap and robots links.
+    </div>
+<?php endif ?>
+
+<form method="post">
+    <?= csrf_field() ?>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="site_name">Site name</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" id="site_name" name="site_name" value="<?= e($module->getPreference('site_name', $preferences['site_name'])) ?>">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="menu_title">Menu title</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" id="menu_title" name="menu_title" value="<?= e($module->menuTitle()) ?>">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="menu_visibility">Show Family History menu link</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="menu_visibility" name="menu_visibility">
+                <?php $value = $module->getPreference('menu_visibility', $preferences['menu_visibility']); ?>
+                <option value="hidden" <?= $value === 'hidden' ? 'selected' : '' ?>>Hidden</option>
+                <option value="admin" <?= $value === 'admin' ? 'selected' : '' ?>>Admin only</option>
+                <option value="logged_in" <?= $value === 'logged_in' ? 'selected' : '' ?>>Logged-in users only</option>
+                <option value="everyone" <?= $value === 'everyone' ? 'selected' : '' ?>>Everyone</option>
+            </select>
+            <div class="form-text">Use Hidden or Admin only if your existing homepage is the public entry point.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="seo_indexing_mode">Allow search engines to index SEO helper pages</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="seo_indexing_mode" name="seo_indexing_mode">
+                <?php $value = $module->getPreference('seo_indexing_mode', $preferences['seo_indexing_mode']); ?>
+                <option value="testing" <?= $value === 'testing' ? 'selected' : '' ?>>No, testing mode</option>
+                <option value="public" <?= $value === 'public' ? 'selected' : '' ?>>Yes, public mode</option>
+            </select>
+            <div class="form-text">Testing mode adds a noindex tag to the SEO helper landing, surname and person summary pages. It does not block the normal webtrees pages.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="use_existing_homepage_as_landing">Use existing tree homepage as public SEO landing page</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="use_existing_homepage_as_landing" name="use_existing_homepage_as_landing">
+                <?php $value = $module->getPreference('use_existing_homepage_as_landing', $preferences['use_existing_homepage_as_landing']); ?>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+            </select>
+            <div class="form-text">Recommended. This keeps your current homepage as the main public entry point and lets the SEO helper work behind it.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="enable_homepage_seo_tags">Add homepage SEO metadata</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="enable_homepage_seo_tags" name="enable_homepage_seo_tags">
+                <?php $value = $module->getPreference('enable_homepage_seo_tags', $preferences['enable_homepage_seo_tags']); ?>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+            </select>
+            <div class="form-text">Adds a homepage description, canonical URL, Open Graph tags and structured data to the existing tree homepage.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="homepage_title">Homepage SEO title</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" id="homepage_title" name="homepage_title" value="<?= e($module->getPreference('homepage_title', $preferences['homepage_title'])) ?>">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="homepage_description">Homepage SEO description</label>
+        <div class="col-sm-9">
+            <textarea class="form-control" id="homepage_description" name="homepage_description" rows="4"><?= e($module->getPreference('homepage_description', $preferences['homepage_description'])) ?></textarea>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="enable_homepage_block">Enable Family History Start homepage block</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="enable_homepage_block" name="enable_homepage_block">
+                <?php $value = $module->getPreference('enable_homepage_block', $preferences['enable_homepage_block']); ?>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+            </select>
+            <div class="form-text">Makes an optional homepage block available in the webtrees block editor.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="homepage_block_title">Homepage block title</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" id="homepage_block_title" name="homepage_block_title" value="<?= e($module->getPreference('homepage_block_title', $preferences['homepage_block_title'])) ?>">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="homepage_block_intro">Homepage block intro</label>
+        <div class="col-sm-9">
+            <textarea class="form-control" id="homepage_block_intro" name="homepage_block_intro" rows="2"><?= e($module->getPreference('homepage_block_intro', $preferences['homepage_block_intro'])) ?></textarea>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="landing_title">Landing page title</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" id="landing_title" name="landing_title" value="<?= e($module->getPreference('landing_title', $preferences['landing_title'])) ?>">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="publisher_name">Publisher name</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" id="publisher_name" name="publisher_name" value="<?= e($module->getPreference('publisher_name', $preferences['publisher_name'])) ?>">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="site_description">Site description</label>
+        <div class="col-sm-9">
+            <textarea class="form-control" id="site_description" name="site_description" rows="4"><?= e($module->getPreference('site_description', $preferences['site_description'])) ?></textarea>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="landing_intro">Landing page intro</label>
+        <div class="col-sm-9">
+            <textarea class="form-control" id="landing_intro" name="landing_intro" rows="3"><?= e($module->getPreference('landing_intro', $preferences['landing_intro'])) ?></textarea>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="primary_surnames">Primary surnames</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" id="primary_surnames" name="primary_surnames" value="<?= e($module->getPreference('primary_surnames', $preferences['primary_surnames'])) ?>">
+            <div class="form-text">Comma separated.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="primary_places">Primary places</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" id="primary_places" name="primary_places" value="<?= e($module->getPreference('primary_places', $preferences['primary_places'])) ?>">
+            <div class="form-text">Comma separated.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="featured_individual_xrefs">Featured ancestors</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" id="featured_individual_xrefs" name="featured_individual_xrefs" value="<?= e($module->getPreference('featured_individual_xrefs', $preferences['featured_individual_xrefs'])) ?>">
+            <div class="form-text">Comma separated individual IDs, for example <code>I1318, I1299, I2835</code>. Only public deceased people are shown.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="google_site_verification">Google site verification</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" id="google_site_verification" name="google_site_verification" value="<?= e($module->getPreference('google_site_verification', $preferences['google_site_verification'])) ?>">
+            <div class="form-text">Paste only the verification token, not the whole meta tag.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="enable_head_tags">Enable head tags</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="enable_head_tags" name="enable_head_tags">
+                <?php $value = $module->getPreference('enable_head_tags', $preferences['enable_head_tags']); ?>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="enable_individual_tags">Enable individual SEO tags</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="enable_individual_tags" name="enable_individual_tags">
+                <?php $value = $module->getPreference('enable_individual_tags', $preferences['enable_individual_tags']); ?>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+            </select>
+            <div class="form-text">Adds person-specific descriptions, Open Graph tags and JSON-LD to public deceased individual pages.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="enable_surname_pages">Enable surname pages</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="enable_surname_pages" name="enable_surname_pages">
+                <?php $value = $module->getPreference('enable_surname_pages', $preferences['enable_surname_pages']); ?>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+            </select>
+            <div class="form-text">Creates public surname landing pages from the surname badges on the landing page.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="noindex_living_or_private_people">Noindex living/private people</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="noindex_living_or_private_people" name="noindex_living_or_private_people">
+                <?php $value = $module->getPreference('noindex_living_or_private_people', $preferences['noindex_living_or_private_people']); ?>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+            </select>
+            <div class="form-text">Recommended. Adds a noindex tag when the module detects a living or private individual page.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="include_surname_pages_in_sitemap">Include surname pages in sitemap</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="include_surname_pages_in_sitemap" name="include_surname_pages_in_sitemap">
+                <?php $value = $module->getPreference('include_surname_pages_in_sitemap', $preferences['include_surname_pages_in_sitemap']); ?>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="include_people_in_sitemap">Include deceased public individuals in sitemap</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="include_people_in_sitemap" name="include_people_in_sitemap">
+                <?php $value = $module->getPreference('include_people_in_sitemap', $preferences['include_people_in_sitemap']); ?>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No, landing page only</option>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes, include visible deceased people</option>
+            </select>
+            <div class="form-text">Leave this off until you have tested privacy and checked the generated sitemap.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="people_sitemap_target">People sitemap target</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="people_sitemap_target" name="people_sitemap_target">
+                <?php $value = $module->getPreference('people_sitemap_target', $preferences['people_sitemap_target']); ?>
+                <option value="seo" <?= $value === 'seo' ? 'selected' : '' ?>>SEO summary pages</option>
+                <option value="webtrees" <?= $value === 'webtrees' ? 'selected' : '' ?>>Original webtrees individual pages</option>
+            </select>
+            <div class="form-text">SEO summary pages are cleaner for Google and link through to the full profile.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="max_people_in_sitemap">Maximum people in sitemap</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="number" id="max_people_in_sitemap" name="max_people_in_sitemap" value="<?= e($module->getPreference('max_people_in_sitemap', $preferences['max_people_in_sitemap'])) ?>" min="1" max="50000">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="max_people_per_surname_page">Maximum people per surname page</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="number" id="max_people_per_surname_page" name="max_people_per_surname_page" value="<?= e($module->getPreference('max_people_per_surname_page', $preferences['max_people_per_surname_page'])) ?>" min="1" max="1000">
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Save</button>
+</form>

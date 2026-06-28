@@ -1,0 +1,58 @@
+<?php
+
+?>
+
+<div class="wt-page-content potts-seo-helper potts-seo-person">
+    <h2><?= e($context['name']) ?><?php if ($context['years'] !== '') : ?> <small class="text-muted">(<?= e($context['years']) ?>)</small><?php endif ?></h2>
+
+    <p class="lead"><?= e($context['description']) ?></p>
+
+    <div class="row">
+        <div class="col-md-8">
+            <h3>Key facts</h3>
+            <table class="table table-sm table-striped">
+                <tbody>
+                    <?php if ($context['birth_date'] !== '' || $context['birth_place'] !== '') : ?>
+                        <tr>
+                            <th scope="row">Birth</th>
+                            <td>
+                                <?= e(trim($context['birth_date'] . ' ' . $context['birth_place'])) ?>
+                            </td>
+                        </tr>
+                    <?php endif ?>
+
+                    <?php if ($context['death_date'] !== '' || $context['death_place'] !== '') : ?>
+                        <tr>
+                            <th scope="row">Death</th>
+                            <td>
+                                <?= e(trim($context['death_date'] . ' ' . $context['death_place'])) ?>
+                            </td>
+                        </tr>
+                    <?php endif ?>
+                </tbody>
+            </table>
+
+            <p>
+                This public summary page has been generated to help search engines and family-history researchers find the relevant ancestor profile more easily.
+            </p>
+
+            <p>
+                <a class="btn btn-primary" href="<?= e($context['profile_url']) ?>">Open the full webtrees profile</a>
+            </p>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">About this page</div>
+                <div class="card-body">
+                    <p>
+                        Public SEO pages are only generated for deceased people who are visible under the current webtrees privacy rules.
+                    </p>
+                    <p class="mb-0">
+                        Living and private records should remain protected by webtrees privacy settings.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
