@@ -1,7 +1,21 @@
-# Optional Apache rewrite examples.
-# Test these on a staging copy first, because webtrees routing and hosting setups vary.
-# Replace YourTreeName with your webtrees tree name.
+# Potts SEO Helper dynamic root-file rewrites (Option B)
 #
-# RewriteEngine On
-# RewriteRule ^sitemap\.xml$ index.php?route=/tree/YourTreeName/potts-seo-helper&action=sitemap [L,QSA]
-# RewriteRule ^robots\.txt$ index.php?route=/tree/YourTreeName/potts-seo-helper&action=robots [L,QSA]
+# Put these near the top of the webtrees root .htaccess file, before the
+# normal webtrees front-controller rules and before any -f / -d file checks.
+#
+# v0.6.18 recommends the fallback routes below because webtrees core can
+# answer /robots.txt before a custom module route gets a chance.
+#
+# If you already have a physical robots.txt or sitemap.xml file, remove/rename
+# it or make sure these rules are above any rule that serves existing files.
+
+RewriteEngine On
+RewriteRule ^robots\.txt$ index.php?route=/potts-seo-helper/robots.txt [L,QSA]
+RewriteRule ^sitemap\.xml$ index.php?route=/potts-seo-helper/sitemap.xml [L,QSA]
+
+# Alternative for sitemap only if your host passes the root sitemap route cleanly:
+# RewriteRule ^sitemap\.xml$ index.php?route=/sitemap.xml [L,QSA]
+
+# After saving, test:
+# curl -sS -L https://example.com/robots.txt | grep -i '^Sitemap:'
+# curl -sS -L https://example.com/sitemap.xml | head

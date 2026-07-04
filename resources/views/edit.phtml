@@ -21,7 +21,7 @@
             Admin quick links
         </div>
         <div class="card-body">
-            <p class="mb-3">Use these links to check the public SEO helper pages generated for this tree.</p>
+            <p class="mb-3">Use these admin preview links to check the SEO helper output generated for this tree. They use the working settings route, so they avoid public-route redirects.</p>
             <div class="d-flex flex-wrap gap-2">
                 <?php foreach ($admin_links as $label => $url) : ?>
                     <a class="btn btn-outline-primary" href="<?= e($url) ?>"><?= e($label) ?></a>
@@ -42,6 +42,14 @@
         <label class="col-sm-3 col-form-label" for="site_name">Site name</label>
         <div class="col-sm-9">
             <input class="form-control" type="text" id="site_name" name="site_name" value="<?= e($module->getPreference('site_name', $preferences['site_name'])) ?>">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="preview_tree_name">Tree name for SEO output previews</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" id="preview_tree_name" name="preview_tree_name" value="<?= e($module->getPreference('preview_tree_name', $preferences['preview_tree_name'])) ?>" placeholder="Auto-detect, e.g. OurFamily">
+            <div class="form-text">Optional. Leave blank to auto-detect. If the admin preview buttons say “Tree not found”, enter your webtrees tree name here.</div>
         </div>
     </div>
 
@@ -201,6 +209,140 @@
             <div class="form-text">Paste only the verification token, not the whole meta tag.</div>
         </div>
     </div>
+
+    <hr class="my-4">
+    <h3>Analytics and verification</h3>
+    <p class="text-muted">Google Analytics is optional. It helps you understand visitor behaviour, but it is not required for Google indexing.</p>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="enable_google_analytics">Enable Google Analytics</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="enable_google_analytics" name="enable_google_analytics">
+                <?php $value = $module->getPreference('enable_google_analytics', $preferences['enable_google_analytics']); ?>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+            </select>
+            <div class="form-text">Leave this off until you have created a GA4 property and copied the Measurement ID.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="google_analytics_measurement_id">GA4 Measurement ID</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="text" id="google_analytics_measurement_id" name="google_analytics_measurement_id" value="<?= e($module->getPreference('google_analytics_measurement_id', $preferences['google_analytics_measurement_id'])) ?>" placeholder="G-XXXXXXXXXX">
+            <div class="form-text">Paste the GA4 Measurement ID only. If you accidentally paste the full Google tag, the module will try to extract the <code>G-</code> ID.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="analytics_exclude_logged_users">Exclude logged-in users from Analytics</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="analytics_exclude_logged_users" name="analytics_exclude_logged_users">
+                <?php $value = $module->getPreference('analytics_exclude_logged_users', $preferences['analytics_exclude_logged_users']); ?>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+            </select>
+            <div class="form-text">Recommended. This keeps your own admin and family editing visits out of the statistics.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="analytics_exclude_admin_pages">Exclude admin and settings pages from Analytics</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="analytics_exclude_admin_pages" name="analytics_exclude_admin_pages">
+                <?php $value = $module->getPreference('analytics_exclude_admin_pages', $preferences['analytics_exclude_admin_pages']); ?>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+            </select>
+            <div class="form-text">Recommended. Analytics should focus on public visitor pages, not control panel activity.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="analytics_respect_private_pages">Avoid tracking private-looking pages</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="analytics_respect_private_pages" name="analytics_respect_private_pages">
+                <?php $value = $module->getPreference('analytics_respect_private_pages', $preferences['analytics_respect_private_pages']); ?>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+            </select>
+            <div class="form-text">Recommended for genealogy sites. The module will avoid Analytics on pages it detects as private, living-person, edit, media, source or repository pages.</div>
+        </div>
+    </div>
+
+    <hr class="my-4">
+    <h3>Crawler and indexing controls</h3>
+    <p class="text-muted">These settings help reduce crawler load by steering robots away from low-value webtrees routes and adding noindex tags to utility pages.</p>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="enable_robots_protection">Enable robots.txt protection</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="enable_robots_protection" name="enable_robots_protection">
+                <?php $value = $module->getPreference('enable_robots_protection', $preferences['enable_robots_protection']); ?>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+            </select>
+            <div class="form-text">Recommended while the site is receiving unwanted crawler traffic. This controls the module's robots output.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="robots_bingbot_crawl_delay">Bingbot crawl delay</label>
+        <div class="col-sm-9">
+            <input class="form-control" type="number" id="robots_bingbot_crawl_delay" name="robots_bingbot_crawl_delay" value="<?= e($module->getPreference('robots_bingbot_crawl_delay', $preferences['robots_bingbot_crawl_delay'])) ?>" min="0" max="60">
+            <div class="form-text">A gentle crawl delay for Bing. Use 0 to omit the Bing-specific crawl delay.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="robots_disallow_paths">Robots disallow paths</label>
+        <div class="col-sm-9">
+            <textarea class="form-control font-monospace" id="robots_disallow_paths" name="robots_disallow_paths" rows="12"><?= e($module->getPreference('robots_disallow_paths', $preferences['robots_disallow_paths'])) ?></textarea>
+            <div class="form-text">One path per line. Use <code>{tree}</code> as a placeholder for the current tree name. Lines starting with <code>#</code> are ignored.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="enable_noindex_rules">Enable utility-page noindex rules</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="enable_noindex_rules" name="enable_noindex_rules">
+                <?php $value = $module->getPreference('enable_noindex_rules', $preferences['enable_noindex_rules']); ?>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+            </select>
+            <div class="form-text">Recommended. Matching pages receive <code>noindex,follow</code> so search engines avoid indexing generated utility pages.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="noindex_url_patterns">Noindex URL patterns</label>
+        <div class="col-sm-9">
+            <textarea class="form-control font-monospace" id="noindex_url_patterns" name="noindex_url_patterns" rows="12"><?= e($module->getPreference('noindex_url_patterns', $preferences['noindex_url_patterns'])) ?></textarea>
+            <div class="form-text">One pattern per line. Use <code>{tree}</code> for the tree name and <code>*</code> as a wildcard.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="include_helper_in_sitemap">Include helper landing page in sitemap</label>
+        <div class="col-sm-9">
+            <select class="form-select" id="include_helper_in_sitemap" name="include_helper_in_sitemap">
+                <?php $value = $module->getPreference('include_helper_in_sitemap', $preferences['include_helper_in_sitemap']); ?>
+                <option value="0" <?= $value === '0' ? 'selected' : '' ?>>No</option>
+                <option value="1" <?= $value === '1' ? 'selected' : '' ?>>Yes</option>
+            </select>
+            <div class="form-text">Recommended: No. Keep the sitemap focused on your real public family-history pages.</div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="additional_sitemap_urls">Additional sitemap URLs</label>
+        <div class="col-sm-9">
+            <textarea class="form-control font-monospace" id="additional_sitemap_urls" name="additional_sitemap_urls" rows="4"><?= e($module->getPreference('additional_sitemap_urls', $preferences['additional_sitemap_urls'])) ?></textarea>
+            <div class="form-text">One stable public URL per line. Use relative paths such as <code>/tree/{tree}/family-books</code> or full URLs.</div>
+        </div>
+    </div>
+
+    <hr class="my-4">
 
     <div class="row mb-3">
         <label class="col-sm-3 col-form-label" for="enable_head_tags">Enable head tags</label>
