@@ -2,9 +2,9 @@
 
 A small custom webtrees module to help Google and social platforms understand a family-history website.
 
-Version: 0.6.18
+Version: 0.6.19
 
-Created by Jason Potts
+Created by Jason Potts with AI-assisted development.
 
 ## Features
 
@@ -27,13 +27,13 @@ Created by Jason Potts
 - Conservative privacy checks using webtrees visibility and death status
 - Admin-only SEO health check
 
-## New in 0.6.18
+## New in 0.6.19
 
 - Added root-file health checks that compare public `/robots.txt` and `/sitemap.xml` against the SEO Helper output.
 - Added a warning when public `/robots.txt` does not contain a valid `Sitemap:` line pointing to `/sitemap.xml`.
 - Switched generated robots and sitemap responses to explicit PSR-7 headers for `text/plain` and `application/xml`.
 - Updated the `.htaccess` guidance to prefer the `/potts-seo-helper/*.xml/txt` fallback routes, avoiding webtrees core `/robots.txt` conflicts.
-- Kept the Custom Module Manager release guidance current for `v0.6.18`.
+- Kept the Custom Module Manager release guidance current for `v0.6.19`.
 
 ## New in 0.6.17
 
@@ -146,8 +146,32 @@ Created by Jason Potts
 
 This module is packaged for Jefferson49's Custom Module Manager style of installation.
 
+Recommended GitHub release pattern:
+
+- Tag: `v0.6.19`
+- Release asset: `potts_seo_helper_v0.6.19.zip`
+- ZIP contents: one top-level folder named `potts_seo_helper` containing `module.php`, `resources/`, `README.md`, `CHANGELOG.md`, `latest-version.txt` and `LICENSE`
+
+Suggested Custom Module Manager configuration entry:
+
+```json
+"_potts_seo_helper_": {
+  "update_service": "GithubModuleUpdate",
+  "params": {
+    "github_repo": "PottsNet/potts-seo-helper",
+    "tag_prefix": "v",
+    "category": "admin",
+    "title": "Potts SEO Helper",
+    "description": "Adds genealogy-focused SEO metadata, sitemap, robots.txt guidance, noindex controls and optional analytics for webtrees."
+  }
+}
+```
 
 The module will only appear in the Custom Module Manager public list after the manager's configuration includes this entry. Until then, users can install it manually from the GitHub release asset.
+
+## Update service note
+
+This release includes `latest-version.txt` and `customModuleLatestVersionUrl()` so webtrees and update managers can display an update service instead of `None`.
 
 ## Installation
 

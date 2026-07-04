@@ -1,7 +1,14 @@
 # Changelog
 
+## v0.6.19
+
+- Added/update confirmed latest-version.txt support for webtrees and Custom Module Manager update detection.
+- Added customModuleLatestVersionUrl() so the Update service is not shown as None.
+- Release version bumped from v0.6.18 because v0.6.18 already exists on GitHub.
+
 ## v0.6.18
 
+- Added update service URL support for webtrees and Custom Module Manager.
 - Added root-file health checks for public `/robots.txt` and `/sitemap.xml`.
 - Added a health warning when the public robots file is not the SEO Helper output.
 - Added a health warning when public robots.txt does not advertise `Sitemap: https://your-site/sitemap.xml`.

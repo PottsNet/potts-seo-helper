@@ -40,7 +40,8 @@ return new class extends AbstractModule implements ModuleCustomInterface, Module
      */
     private array $last_surname_debug = [];
 
-    private const CUSTOM_VERSION = '0.6.18';
+    private const CUSTOM_VERSION = '0.6.19';
+    private const LATEST_VERSION_URL = 'https://raw.githubusercontent.com/PottsNet/potts-seo-helper/main/latest-version.txt';
     private const ACTION_PARAM = 'potts_seo_action';
     private const ADMIN_OUTPUT_PARAM = 'potts_seo_admin_output';
     private const TREE_PARAM = 'potts_seo_tree';
@@ -72,7 +73,24 @@ return new class extends AbstractModule implements ModuleCustomInterface, Module
 
     public function customModuleLatestVersion(): string
     {
-        return self::CUSTOM_VERSION;
+        return Registry::cache()->file()->remember(
+            $this->name() . '-latest-version',
+            function (): string {
+                $latest = trim((string) @file_get_contents(self::LATEST_VERSION_URL));
+
+                if (preg_match('/^v?(\d+\.\d+\.\d+(?:[-+][A-Za-z0-9.\-]+)?)$/', $latest, $match) === 1) {
+                    return $match[1];
+                }
+
+                return $this->customModuleVersion();
+            },
+            86400
+        );
+    }
+
+    public function customModuleLatestVersionUrl(): string
+    {
+        return self::LATEST_VERSION_URL;
     }
 
     public function customModuleSupportUrl(): string

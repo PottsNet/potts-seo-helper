@@ -3,7 +3,7 @@
 # Put these near the top of the webtrees root .htaccess file, before the
 # normal webtrees front-controller rules and before any -f / -d file checks.
 #
-# v0.6.18 recommends the fallback routes below because webtrees core can
+# v0.6.19 recommends the fallback routes below because webtrees core can
 # answer /robots.txt before a custom module route gets a chance.
 #
 # If you already have a physical robots.txt or sitemap.xml file, remove/rename
