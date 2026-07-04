@@ -4,7 +4,7 @@ A small custom webtrees module to help Google and social platforms understand a 
 
 Version: 0.6.18
 
-Created by Jason Potts with AI-assisted development.
+Created by Jason Potts
 
 ## Features
 
