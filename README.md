@@ -146,26 +146,6 @@ Created by Jason Potts
 
 This module is packaged for Jefferson49's Custom Module Manager style of installation.
 
-Recommended GitHub release pattern:
-
-- Tag: `v0.6.18`
-- Release asset: `potts_seo_helper_v0.6.18.zip`
-- ZIP contents: one top-level folder named `potts_seo_helper` containing `module.php`, `resources/`, `README.md`, `CHANGELOG.md` and `LICENSE`
-
-Suggested Custom Module Manager configuration entry:
-
-```json
-"_potts_seo_helper_": {
-  "update_service": "GithubModuleUpdate",
-  "params": {
-    "github_repo": "PottsNet/potts-seo-helper",
-    "tag_prefix": "v",
-    "category": "admin",
-    "title": "Potts SEO Helper",
-    "description": "Adds genealogy-focused SEO metadata, sitemap, robots.txt guidance, noindex controls and optional analytics for webtrees."
-  }
-}
-```
 
 The module will only appear in the Custom Module Manager public list after the manager's configuration includes this entry. Until then, users can install it manually from the GitHub release asset.
 
