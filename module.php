@@ -40,7 +40,7 @@ return new class extends AbstractModule implements ModuleCustomInterface, Module
      */
     private array $last_surname_debug = [];
 
-    private const CUSTOM_VERSION = '0.6.19';
+    private const CUSTOM_VERSION = '0.6.20';
     private const LATEST_VERSION_URL = 'https://raw.githubusercontent.com/PottsNet/potts-seo-helper/main/latest-version.txt';
     private const ACTION_PARAM = 'potts_seo_action';
     private const ADMIN_OUTPUT_PARAM = 'potts_seo_admin_output';
@@ -2483,12 +2483,7 @@ return new class extends AbstractModule implements ModuleCustomInterface, Module
         }
 
         
-        $tree = $this->currentTree() ?? $this->firstAvailableTree();
-        if ($tree instanceof Tree) {
-            return $this->moduleActionUrl($tree, 'Admin');
-        }
-
-        return $this->absoluteUrl('/module/' . rawurlencode($this->name()) . '/Admin');
+        return $this->absoluteUrl('index.php?route=' . rawurlencode('/module/' . $this->name() . '/Admin'));
     }
 
     /**
@@ -2542,10 +2537,9 @@ return new class extends AbstractModule implements ModuleCustomInterface, Module
             return $this->urlForAction($tree, $action);
         }
 
-        $action_name = $this->moduleActionName($action);
-        $path = 'index.php?route=' . rawurlencode('/module/' . $this->name() . '/' . $action_name . '/' . $tree_name);
+        $path = $this->treeScopedRoutePath($tree_name, $action);
 
-        return $this->absoluteUrl($path);
+        return $this->absoluteUrl('index.php?route=' . rawurlencode($path));
     }
 
     private function urlForAction(Tree $tree, string $action): string
@@ -2571,25 +2565,40 @@ return new class extends AbstractModule implements ModuleCustomInterface, Module
     }
 
     /**
-     * Build a standard webtrees module-action URL.
+     * Build a webtrees route URL that works with both pretty and non-pretty URLs.
      *
-     * Use the pretty module route directly. On sites with pretty URLs enabled,
-     * the older `index.php?route=...` form can be redirected before webtrees has
-     * a chance to resolve the module action, and some installations fall back to
-     * the tree landing/My page. The explicit `/module/{module}/{Action}/{tree}`
-     * path is the native route webtrees registers for module actions.
+     * Some webtrees sites do not enable pretty URLs, so direct `/module/...` links
+     * can 404. Use the module's registered tree-scoped routes via `index.php?route=`
+     * instead. These routes are handled by this module and remain compatible when
+     * pretty URLs are enabled.
      *
      * @param array<string,string> $params
      */
     private function moduleActionUrl(Tree $tree, string $action_name, array $params = []): string
     {
-        $url = '/module/' . rawurlencode($this->name()) . '/' . rawurlencode($action_name) . '/' . rawurlencode($tree->name());
+        $path = $this->treeScopedRoutePath($tree->name(), strtolower($action_name));
+        $url = 'index.php?route=' . rawurlencode($path);
 
         if ($params !== []) {
-            $url .= '?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
+            $url .= '&' . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
         }
 
         return $this->absoluteUrl($url);
+    }
+
+    private function treeScopedRoutePath(string $tree_name, string $action): string
+    {
+        $allowed_actions = ['landing', 'surname', 'person', 'sitemap', 'robots', 'health'];
+        $action = strtolower($action);
+        $action = in_array($action, $allowed_actions, true) ? $action : 'landing';
+
+        $path = '/tree/' . rawurlencode($tree_name) . '/potts-seo-helper';
+
+        if ($action !== 'landing') {
+            $path .= '/' . rawurlencode($action);
+        }
+
+        return $path;
     }
 
     /**

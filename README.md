@@ -2,7 +2,7 @@
 
 A small custom webtrees module to help Google and social platforms understand a family-history website.
 
-Version: 0.6.19
+Version: 0.6.20
 
 Created by Jason Potts with AI-assisted development.
 
@@ -26,6 +26,12 @@ Created by Jason Potts with AI-assisted development.
 - Privacy-friendly Analytics exclusions for logged-in users, admin pages and private-looking pages
 - Conservative privacy checks using webtrees visibility and death status
 - Admin-only SEO health check
+
+## New in 0.6.20
+
+- Fixed helper menu, sitemap, robots and health-check links on sites where webtrees pretty URLs are not enabled.
+- Generated helper links now use webtrees `index.php?route=` URLs for the registered tree-scoped helper routes instead of direct `/module/...` paths.
+- Added a clean maintenance package note for users who have seen module-load errors after partial uploads or mixed-version files.
 
 ## New in 0.6.19
 
@@ -148,8 +154,8 @@ This module is packaged for Jefferson49's Custom Module Manager style of install
 
 Recommended GitHub release pattern:
 
-- Tag: `v0.6.19`
-- Release asset: `potts_seo_helper_v0.6.19.zip`
+- Tag: `v0.6.20`
+- Release asset: `potts_seo_helper_v0.6.20.zip`
 - ZIP contents: one top-level folder named `potts_seo_helper` containing `module.php`, `resources/`, `README.md`, `CHANGELOG.md`, `latest-version.txt` and `LICENSE`
 
 Suggested Custom Module Manager configuration entry:
@@ -176,6 +182,8 @@ This release includes `latest-version.txt` and `customModuleLatestVersionUrl()` 
 ## Installation
 
 1. Upload the `potts_seo_helper` folder to `modules_v4`.
+
+If webtrees reports that `ModuleService::load()` returned the wrong type after an update, remove the old `modules_v4/potts_seo_helper` folder completely and upload a fresh copy from the release ZIP. This avoids mixed files from older releases or incomplete FTP uploads.
 2. Enable the module in the webtrees control panel.
 3. Open the module settings and save once.
 4. Open the existing tree homepage and check that it still loads.

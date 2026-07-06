@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.6.20
+
+- Fixed public helper links on sites where webtrees pretty URLs are not enabled.
+- Changed menu, block and quick-link helper URLs to use the registered tree-scoped routes through `index.php?route=` instead of direct `/module/...` paths.
+- Updated the fallback Admin URL to use a non-pretty-safe webtrees route.
+- Added a clean-install note for module-load errors caused by partial uploads or mixed-version files.
+
 ## v0.6.19
 
 - Added/update confirmed latest-version.txt support for webtrees and Custom Module Manager update detection.
